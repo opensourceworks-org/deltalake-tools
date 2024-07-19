@@ -66,3 +66,5 @@ filterwarnings = [
     "ignore::DeprecationWarning"
 ]
 addopts = "--cov=myproject --cov-report html"
+
+
