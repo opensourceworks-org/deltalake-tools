@@ -1,19 +1,20 @@
-# Deltalake Tools
+# Deltalake Tools __[WIP]__
 
 ## Introduction
 
-A set of easy to use tools for deltalake, with a command line interface.
+A set of easy to use tools for deltalake, with a command line interface. Inspired by the Amazon AWS cli tool.  
+
 You don't need this if you're already using delta-rs (deltalake).
-
-Inspired by the Amazon AWS cli tool.  
-
-However, if you use pyspark and your distributed query engine requires a _last_checkpoint file, then this is an easy way to get just that.
+However, if you use ie. pyspark with delta and your distributed SQL query engine requires a _last_checkpoint file, then this is an easy way to get just that.
 
 Delta Table Commands currently supported:
-- compact
-- vacuum
-- create-checkpoint
-- table-version
+- [x] compact
+- [x] vacuum
+- [x] create-checkpoint
+- [x] table-version
+- [ ] delete-table
+- [ ] create-test-table
+- ...
 
 
 ## Getting started
