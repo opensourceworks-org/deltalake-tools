@@ -14,6 +14,7 @@ Delta Table Commands currently supported:
 - [x] table-version
 - [ ] delete-table
 - [ ] create-test-table
+- [ ] convert-to-table
 - [ ] ...
 
 
