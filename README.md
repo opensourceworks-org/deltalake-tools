@@ -139,3 +139,14 @@ $ deltalake-tools table-version /tmp/test_delta_table
 
 ## Contribute
 
+### Test
+- pytest
+- moto[server]: needs to be started before initializing any clients (boto3, delta)
+
+### management
+- [rye](https://rye.astral.sh/)
+- make
+
+### changelog
+- [git-cliff](https://git-cliff.org/)
+
