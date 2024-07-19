@@ -43,5 +43,5 @@ jobs:
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-          REPOSITORY_URL: https://upload.pypi.org/legacy/
+          REPOSITORY_URL: ${{ vars.REPOSITORY_URL }}
         run: make publish-ci
