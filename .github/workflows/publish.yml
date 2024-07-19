@@ -32,9 +32,12 @@ jobs:
       
       - name: Install dependencies
         run: make install
-
+      
+      # need to fix moto_server
       - name: Run tests
-        run: make coverage
+        run: |
+          echo "$(pwd)/.venv/bin" >> $GITHUB_PATH
+          make coverage
 
       - name: Build package
         run: make build
