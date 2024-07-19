@@ -2,10 +2,11 @@
 
 ## Introduction
 
-A set of easy to use tools for deltalake, with a command line interface. Inspired by the Amazon AWS cli tool.  
+A set of easy to use tools for deltalake, with a command line interface. 
 
-You don't need this if you're already using delta-rs (deltalake).
-However, if you use ie. pyspark with delta and your distributed SQL query engine requires a _last_checkpoint file, then this is an easy way to get just that.
+You probably don't need this, especially if you're already using delta-rs (deltalake). Just like you don't need awscli when you already have a boto3 client.
+It's useful as a delta cli ie. as a cron job.
+
 
 Delta Table Commands currently supported:
 - [x] compact
