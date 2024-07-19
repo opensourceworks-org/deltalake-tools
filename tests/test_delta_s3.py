@@ -11,6 +11,16 @@ import time
 import shutil
 import subprocess as sp
 
+from click.testing import CliRunner
+from deltalake_tools.cli.cli import (
+    vacuum,
+    compact,
+    create_checkpoint,
+    table_version
+)
+
+from deltalake_tools.models.models import VirtualAddressingStyle
+
 from deltalake_tools.core.core import (
     delta_compact,
     delta_vacuum,
@@ -188,3 +198,30 @@ def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     files = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="cli-delta-table/_delta_log/_last_checkpoint")
     # logger.error(f"{files=}")
     assert files["KeyCount"] == 1
+
+
+@pytest.mark.cli
+def test_cli_table_version(s3_bucket, s3_details, s3_delta_table_path):
+
+    args = [
+        s3_delta_table_path,
+        "--bucket", s3_bucket,
+        "--access-key-id", s3_details.hmac_keys.access_key_id,
+        "--secret-access-key", s3_details.hmac_keys.secret_access_key,
+        "--region", s3_details.region,
+        "--endpoint-host", s3_details.endpoint_host,
+        "--port", s3_details.port,
+        "--scheme", s3_details.scheme.value,
+    ]
+
+    if s3_details.allow_unsafe_https:
+        args.append("--allow-unsafe-https")
+    
+    if s3_details.virtual_addressing_style == VirtualAddressingStyle.Path:
+        args.append("--path-addressing-style")
+
+    runner = CliRunner()
+    result = runner.invoke(table_version, args)
+    assert result.output.strip().isdigit()
+    assert int(result.output.strip()) == 12
+    assert result.exit_code == 0

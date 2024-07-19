@@ -21,7 +21,7 @@ class S3ClientDetails(BaseModel):
     endpoint_host: str = None
     region: str = None
     port: int = None
-    addressing_style: Optional[VirtualAddressingStyle] = VirtualAddressingStyle.Virtual
+    virtual_addressing_style: Optional[VirtualAddressingStyle] = VirtualAddressingStyle.Virtual
     bucket: Optional[str] = None
     hmac_keys: Optional[S3KeyPairWrite] = None
     scheme: Optional[S3Scheme] = None
@@ -42,7 +42,7 @@ class S3ClientDetails(BaseModel):
         )
 
     def endpoint_url(self) -> Result[str, str]:
-        match self.addressing_style:
+        match self.virtual_addressing_style:
             case VirtualAddressingStyle.Virtual:
                 return Ok(f"{self.scheme.value}://{self.bucket}.{self.endpoint_host}:{self.port}")
             case VirtualAddressingStyle.Path:
@@ -52,7 +52,7 @@ class S3ClientDetails(BaseModel):
 
 
         return Ok({
-            "aws_virtual_hosted_style_request": self.addressing_style.value,
+            "aws_virtual_hosted_style_request": self.virtual_addressing_style.value,
             "AWS_REGION": self.region,
             "AWS_ACCESS_KEY_ID": self.hmac_keys.access_key_id,
             "AWS_SECRET_ACCESS_KEY": self.hmac_keys.secret_access_key,
@@ -64,3 +64,7 @@ class S3ClientDetails(BaseModel):
 class ClientDetails(BaseModel):
     delta_path: str
     s3client_details: Optional[S3ClientDetails] = None
+
+class TableType(Enum):
+    S3: str = "S3"
+    Local: str = "Local"

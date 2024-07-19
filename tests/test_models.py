@@ -24,5 +24,5 @@ def test_s3_config(s3_details: S3ClientDetails) -> None:
     assert config_result.is_ok()
     config = config_result.unwrap()
 
-    assert config["aws_virtual_hosted_style_request"] == s3_details.addressing_style.value
+    assert config["aws_virtual_hosted_style_request"] == s3_details.virtual_addressing_style.value
     assert config["endpoint"] == f"{s3_details.scheme.value}://{s3_details.endpoint_host}:{s3_details.port}"

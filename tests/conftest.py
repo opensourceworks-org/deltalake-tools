@@ -25,7 +25,7 @@ def s3_details(s3key_pair_write) -> S3ClientDetails:
     return S3ClientDetails(
         endpoint_host="localhost",
         region="us-east-1",
-        addressing_style=VirtualAddressingStyle.Path,
+        virtual_addressing_style=VirtualAddressingStyle.Path,
         port=5002,
         bucket="my-test-bucket",
         hmac_keys=s3key_pair_write,
