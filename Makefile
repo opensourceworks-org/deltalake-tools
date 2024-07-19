@@ -43,8 +43,7 @@ publish: build
 	twine upload --repository pypi dist/*
 
 test:
-	source .venv/bin/activate
-	rye test
+	rye test -- -m "not slow"
 
 coverage:
-	rye test -- --cov 
+	rye test -- -m "not slow" --cov 

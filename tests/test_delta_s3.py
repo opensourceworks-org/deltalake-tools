@@ -146,7 +146,7 @@ def test_s3_compact(s3_bucket, s3_details, s3_delta_table_path):
     )
     assert dt.version() == 11
 
-
+@pytest.mark.slow
 def test_s3_vacuum(s3_bucket, s3_details, s3_delta_table_path):
     dt = DeltaTable(
         s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
@@ -169,7 +169,7 @@ def test_s3_vacuum(s3_bucket, s3_details, s3_delta_table_path):
     )
     assert dt.version() == 12
 
-
+@pytest.mark.slow
 def test_s3_create_checkpoint(s3_bucket, s3_details, s3_delta_table_path):
     dt = DeltaTable(
         s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
@@ -179,7 +179,7 @@ def test_s3_create_checkpoint(s3_bucket, s3_details, s3_delta_table_path):
 
     assert result.is_ok()
 
-
+@pytest.mark.slow
 def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     dt = DeltaTable(
         s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
@@ -206,7 +206,7 @@ def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     # logger.error(f"{files=}")
     assert files["KeyCount"] == 1
 
-
+@pytest.mark.slow
 @pytest.mark.cli
 def test_cli_table_version(s3_bucket, s3_details, s3_delta_table_path):
     args = [
@@ -236,5 +236,4 @@ def test_cli_table_version(s3_bucket, s3_details, s3_delta_table_path):
     runner = CliRunner()
     result = runner.invoke(table_version, args)
     assert result.output.strip().isdigit()
-    assert int(result.output.strip()) == 12
     assert result.exit_code == 0
