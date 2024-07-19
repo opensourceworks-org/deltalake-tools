@@ -22,7 +22,7 @@ bump-version: bump update-version
 
 
 # -c to clean dist/ first
-build: update-version
+build:
 	@rye build -c
 
 .PHONY: install
