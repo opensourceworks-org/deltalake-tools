@@ -2,7 +2,7 @@
 
 # using gnu grep on mac, as non default
 VERSION_SOURCE := src/deltalake_tools/__version__.py
-VERSION ?= $(shell ggrep -oP "version\s*=\s*\"(\K.*)(?=\")" $(VERSION_SOURCE))
+VERSION ?= $(shell grep -oP "version\s*=\s*\"(\K.*)(?=\")" $(VERSION_SOURCE))
 
 # bump version in __version__.py 
 bump:
@@ -28,6 +28,7 @@ build:
 .PHONY: install
 install:
 	rye sync
+	rye install "moto[server]" || echo "moto_server already installed"
 
 run: 
 	rye run
@@ -42,6 +43,7 @@ publish: build
 	twine upload --repository pypi dist/*
 
 test:
+	source .venv/bin/activate
 	rye test
 
 coverage:
