@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Update readme
 - Update Readme
 - Update readme
+- Update todo commands in readme
+- Update readme
 
 ### ⚙️ Miscellaneous Tasks
 
