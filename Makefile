@@ -28,6 +28,7 @@ build:
 .PHONY: install
 install:
 	rye sync
+	rye install "moto[server]" || echo "moto_server already installed"
 
 run: 
 	rye run
@@ -42,6 +43,7 @@ publish: build
 	twine upload --repository pypi dist/*
 
 test:
+	source .venv/bin/activate
 	rye test
 
 coverage:
