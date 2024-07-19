@@ -1,5 +1,4 @@
-[![deltalake-tools:build](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml)
-
+[![deltalake-tools](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml)
 # Deltalake Tools __[WIP]__
 
 ## Introduction
