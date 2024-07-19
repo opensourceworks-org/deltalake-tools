@@ -32,6 +32,8 @@ pydantic==2.8.2
 pydantic-core==2.20.1
     # via pydanclick
     # via pydantic
+toml==0.10.2
+    # via deltalake-tools
 typing-extensions==4.12.2
     # via pydanclick
     # via pydantic

@@ -214,6 +214,8 @@ six==1.16.0
     # via rfc3339-validator
 sympy==1.13.0
     # via cfn-lint
+toml==0.10.2
+    # via deltalake-tools
 twine==5.1.1
 typing-extensions==4.12.2
     # via aws-sam-translator

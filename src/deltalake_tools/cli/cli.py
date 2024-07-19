@@ -14,23 +14,38 @@ from deltalake_tools.models.models import (
     S3KeyPairWrite,
     VirtualAddressingStyle
 )
+from deltalake_tools.helpers.utils import get_version_from_pyproject
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
+version = get_version_from_pyproject()
+
 
 @click.group(context_settings=CONTEXT_SETTINGS)
-@click.version_option(version='0.1.2')
+@click.version_option(version=version)
 def cli():
     pass
 
 
 @cli.command()
 @click.argument('delta-table-path')
-def compact(delta_table_path: str):
-    result = delta_compact(delta_table_path)
+@click.option('--bucket', required=False, type=str)
+@click.option('--access-key-id', required=False, type=str)
+@click.option('--secret-access-key', required=False, type=str)
+@click.option('--region', required=False, type=str)
+@click.option('--endpoint-host', required=False, type=str)
+@click.option('--port', type=int, required=False)
+@click.option('--scheme', type=click.Choice(['http', 'https']), required=False)
+@click.option('--allow-unsafe-https', is_flag=True)
+@click.option('--path-addressing-style', is_flag=True)
+def compact(delta_table_path: str, **kwargs) -> None:
+
+    client_details = parse_cli_kwargs(delta_table_path, **kwargs)
+
+    result = delta_compact(delta_table_path, client_details=client_details)
 
     if result.is_err():
         print(result.unwrap_err())
@@ -43,13 +58,24 @@ def compact(delta_table_path: str):
 @click.option('--retention-hours', default=168, type=int)
 @click.option('--disable-retention-duration', is_flag=True)
 @click.option('--force', is_flag=True)
-def vacuum(delta_table_path: str,
+@click.option('--bucket', required=False, type=str)
+@click.option('--access-key-id', required=False, type=str)
+@click.option('--secret-access-key', required=False, type=str)
+@click.option('--region', required=False, type=str)
+@click.option('--endpoint-host', required=False, type=str)
+@click.option('--port', type=int, required=False)
+@click.option('--scheme', type=click.Choice(['http', 'https']), required=False)
+@click.option('--allow-unsafe-https', is_flag=True)
+@click.option('--path-addressing-style', is_flag=True)
+def vacuum(delta_table_path: str, *,
         retention_hours: int,
         disable_retention_duration: bool = False,
-        force: bool = False):
-
+        force: bool = False,
+        **kwargs):
+    client_details = parse_cli_kwargs(delta_table_path, **kwargs)
     result = delta_vacuum(
                 delta_table_path,
+                client_details=client_details,
                 retention_hours=retention_hours,
                 enforce_retention_duration=not disable_retention_duration,
                 dry_run=not force,
@@ -82,6 +108,25 @@ def create_checkpoint(delta_table_path: str):
 @click.option('--allow-unsafe-https', is_flag=True)
 @click.option('--path-addressing-style', is_flag=True)
 def table_version(delta_table_path: str,
+        **kwargs) -> None:
+
+    client_details = parse_cli_kwargs(delta_table_path, **kwargs)
+
+    result = delta_table_version(delta_table_path, client_details=client_details)
+
+    if result.is_err():
+        print(result.unwrap_err())
+    else:
+        print(result.unwrap())
+
+
+def check_delta_table_type(delta_table_path: str) -> TableType:
+    if delta_table_path.startswith("s3://"):
+        return TableType.S3
+    else:
+        return TableType.Local
+
+def parse_cli_kwargs(delta_table_path, 
         *,
         bucket: str,
         access_key_id: str,
@@ -91,7 +136,8 @@ def table_version(delta_table_path: str,
         port: int = 443,
         scheme: str = "https",
         allow_unsafe_https: bool = False,
-        path_addressing_style: bool = VirtualAddressingStyle.Path):
+        path_addressing_style: bool = VirtualAddressingStyle.Path
+) -> S3ClientDetails:
     client_details: S3ClientDetails = None
     # logger.error("in the table version command")
     table_type = check_delta_table_type(delta_table_path)
@@ -133,17 +179,4 @@ def table_version(delta_table_path: str,
         if path_addressing_style:
             client_details.virtual_addressing_style = VirtualAddressingStyle.Path
 
-
-    result = delta_table_version(delta_table_path, client_details=client_details)
-
-    if result.is_err():
-        print(result.unwrap_err())
-    else:
-        print(result.unwrap())
-
-
-def check_delta_table_type(delta_table_path: str) -> TableType:
-    if delta_table_path.startswith("s3://"):
-        return TableType.S3
-    else:
-        return TableType.Local
+    return client_details
