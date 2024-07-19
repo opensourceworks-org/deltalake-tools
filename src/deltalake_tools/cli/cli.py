@@ -92,47 +92,46 @@ def table_version(delta_table_path: str,
         scheme: str = "https",
         allow_unsafe_https: bool = False,
         path_addressing_style: bool = VirtualAddressingStyle.Path):
-    
+    client_details: S3ClientDetails = None
     # logger.error("in the table version command")
-    if ((check_delta_table_type(delta_table_path) == TableType.S3) 
-        and (bucket is None)
-     ):
-        raise click.BadParameter(
-            "Bucket must be provided, along with storage options (see -h), when using S3 table type."
-        )  
-    # logger.error(f"Bucket: {bucket}")
+    table_type = check_delta_table_type(delta_table_path)
+    if table_type == TableType.S3:
+        if bucket is None:
+            raise click.BadParameter(
+                "Bucket must be provided, along with storage options (see -h), when using S3 table type."
+            )  
+        # logger.error(f"Bucket: {bucket}")
+        client_details_result = S3ClientDetails.default()
+        if client_details_result.is_err():
+            click.echo(client_details_result.unwrap_err())
+        
+        client_details = client_details_result.unwrap()
 
-    client_details_result = S3ClientDetails.default()
-    if client_details_result.is_err():
-        click.echo(client_details_result.unwrap_err())
-    
-    client_details = client_details_result.unwrap()
+        if bucket is not None:
+            client_details.bucket = bucket
+        
+        if access_key_id is not None and secret_access_key is not None:
+            client_details.hmac_keys = S3KeyPairWrite(
+                            access_key_id = access_key_id,
+                            secret_access_key = secret_access_key)
 
-    if bucket is not None:
-        client_details.bucket = bucket
-    
-    if access_key_id is not None and secret_access_key is not None:
-        client_details.hmac_keys = S3KeyPairWrite(
-                        access_key_id = access_key_id,
-                        secret_access_key = secret_access_key)
-
-    if region is not None:
-        client_details.region = region
-    
-    if endpoint_host is not None:
-        client_details.endpoint_host = endpoint_host
-    
-    if port is not None:
-        client_details.port = port
-    
-    if scheme is not None:
-        client_details.scheme = S3Scheme(scheme)
-    
-    if allow_unsafe_https:
-        client_details.allow_unsafe_https = True
-    
-    if path_addressing_style:
-        client_details.virtual_addressing_style = VirtualAddressingStyle.Path
+        if region is not None:
+            client_details.region = region
+        
+        if endpoint_host is not None:
+            client_details.endpoint_host = endpoint_host
+        
+        if port is not None:
+            client_details.port = port
+        
+        if scheme is not None:
+            client_details.scheme = S3Scheme(scheme)
+        
+        if allow_unsafe_https:
+            client_details.allow_unsafe_https = True
+        
+        if path_addressing_style:
+            client_details.virtual_addressing_style = VirtualAddressingStyle.Path
 
 
     result = delta_table_version(delta_table_path, client_details=client_details)
