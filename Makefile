@@ -34,3 +34,9 @@ publish-test: build
 
 publish: build
 	twine upload --repository pypi dist/*
+
+test:
+	rye test
+
+coverage:
+	rye test -- --cov
