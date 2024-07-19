@@ -23,7 +23,6 @@ bump-version: bump update-version
 
 # -c to clean dist/ first
 build: update-version
-	@git cliff -o CHANGELOG.md   
 	@rye build -c
 
 .PHONY: install
