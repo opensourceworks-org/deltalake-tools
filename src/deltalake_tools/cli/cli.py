@@ -1,6 +1,8 @@
 import click
 import logging
 
+from deltalake_tools.__version__ import version
+
 from deltalake_tools.core.core import (
     delta_compact,
     delta_vacuum,
@@ -14,14 +16,12 @@ from deltalake_tools.models.models import (
     S3KeyPairWrite,
     VirtualAddressingStyle
 )
-from deltalake_tools.helpers.utils import get_version_from_pyproject
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
-version = get_version_from_pyproject()
 
 
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -88,8 +88,19 @@ def vacuum(delta_table_path: str, *,
 
 @cli.command()
 @click.argument('delta-table-path')
-def create_checkpoint(delta_table_path: str):
-    result = delta_create_checkpoint(delta_table_path)
+@click.option('--bucket', required=False, type=str)
+@click.option('--access-key-id', required=False, type=str)
+@click.option('--secret-access-key', required=False, type=str)
+@click.option('--region', required=False, type=str)
+@click.option('--endpoint-host', required=False, type=str)
+@click.option('--port', type=int, required=False)
+@click.option('--scheme', type=click.Choice(['http', 'https']), required=False)
+@click.option('--allow-unsafe-https', is_flag=True)
+@click.option('--path-addressing-style', is_flag=True)
+def create_checkpoint(delta_table_path: str, **kwargs) -> None:
+    client_details = parse_cli_kwargs(delta_table_path, **kwargs)
+
+    result = delta_create_checkpoint(delta_table_path, client_details=client_details)
 
     if result.is_err():
         print(result.unwrap_err())

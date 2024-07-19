@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Add CHANGELOG
+- Update changelog
 
 ### ⚙️ Miscellaneous Tasks
 
