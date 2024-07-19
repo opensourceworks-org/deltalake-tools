@@ -2,7 +2,7 @@
 
 # using gnu grep on mac, as non default
 VERSION_SOURCE := src/deltalake_tools/__version__.py
-VERSION ?= $(shell ggrep -oP "version\s*=\s*\"(\K.*)(?=\")" $(VERSION_SOURCE))
+VERSION ?= $(shell grep -oP "version\s*=\s*\"(\K.*)(?=\")" $(VERSION_SOURCE))
 
 # bump version in __version__.py 
 bump:
