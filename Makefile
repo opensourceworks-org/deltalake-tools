@@ -18,11 +18,11 @@ update-version:
 	@rm -f pyproject.toml.bak
 
 # update both pyproject.toml and __version__.py
-bump-version: bump update_version
+bump-version: bump update-version
 
 
 # -c to clean dist/ first
-build: update_version
+build: update-version
 	@git cliff -o CHANGELOG.md   
 	@rye build -c
 
@@ -39,4 +39,4 @@ test:
 	rye test
 
 coverage:
-	rye test -- --cov
+	rye test -- --cov --cov-report html --cov-report xml
