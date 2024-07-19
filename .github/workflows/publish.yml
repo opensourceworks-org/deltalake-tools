@@ -35,11 +35,9 @@ jobs:
       
       # need to fix moto_server
       - name: Run tests
-        shell: bash
         run: |
-          echo "$(pwd)/.venv/bin" >> $GITHUB_PATH
-          which moto_server
-          pwd
+          source .venv/bin/activate
+          make coverage
 
 
       - name: Build package
