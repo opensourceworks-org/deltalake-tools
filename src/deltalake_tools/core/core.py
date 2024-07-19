@@ -5,23 +5,14 @@ from deltalake.exceptions import TableNotFoundError
 from deltalake_tools.models.models import S3ClientDetails
 from deltalake_tools.result import Result, Ok, Err
 from typing import Any
-from deltalake_tools.models.models import (
-    S3ClientDetails,
-    S3Scheme,
-    VirtualAddressingStyle,
-    S3KeyPairWrite
-)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def hello_world(arg: str) -> str:
-    return f"hello {arg}"
-
 class DeltaTableProcessor:
     def __init__(self,
         delta_table_path: str,
-        client_details: S3ClientDetails,
+        client_details: S3ClientDetails = None,
     ):
         self.delta_table_path = delta_table_path
         self.client_details = client_details
@@ -42,21 +33,19 @@ class DeltaTableProcessor:
                         self.delta_table_path,
                     )
         except TableNotFoundError as e:
-            logger.error(f"DeltaTable {self.delta_table_path} not found: {str(e)}")
+            # logger.error(f"DeltaTable {self.delta_table_path} not found: {str(e)}")
             return 
         except Exception as e:
             raise Exception(f"Error initializing DeltaTable: {str(e)}")
-        
         return dt
         
 
     def compact_table(self) -> Result[dict[str, Any], str]:
-
         try:
-            logger.error(f"table version: {self.delta_table.version()}")
             result = self.delta_table.optimize.compact()
             return Ok(result)
         except Exception as e:
+            # raise e
             return Err(f"Error compacting DeltaTable: {str(e)}")
 
     def vacuum_table(self,
@@ -85,25 +74,6 @@ class DeltaTableProcessor:
             return Ok(self.delta_table.version())
         except Exception as e:
             return Err(f"Error getting table version: {str(e)}")
-
-
-# def set_client_details(
-#     bucket_name: None,
-#     endpoint_host: str = None,
-#     access_key: str = None,
-#     secret_key: str = None,
-#     addressing_style: str = "virtual",
-#     region: str = "us-east-1",
-#     port: int = 443,
-#     allow_unsafe_https: bool = False,
-#     scheme: str = "https",
-# ) -> Result[S3ClientDetails, str]:
-
-
-
-#     client_details = S3ClientDetails.default()
-
-
 
 
 def delta_compact(delta_table_path: str,
@@ -140,10 +110,11 @@ def delta_create_checkpoint(delta_table_path: str,
         return Err(f"DeltaTable {delta_table_path} not found.")
     return processor.create_checkpoint()
 
-def delta_version(delta_table_path: str,
+def table_version(delta_table_path: str,
                   client_details: S3ClientDetails = None
     ) -> Result[int, str]:
     processor = DeltaTableProcessor(delta_table_path, client_details)
     if processor.delta_table is None:
         return Err(f"DeltaTable {delta_table_path} not found.")
+
     return processor.table_version()

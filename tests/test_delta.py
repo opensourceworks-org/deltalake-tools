@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 @pytest.fixture(scope="session")
 def delta_table_with_data(delta_table_path):
     dt = DeltaTable(delta_table_path)
-    logger.error(f"{delta_table_path=}")
+    # logger.error(f"{delta_table_path=}")
 
     assert dt.version() == 0
 
@@ -45,7 +45,7 @@ def delta_table_with_data(delta_table_path):
 
 def test_init_delta_table(delta_table_with_data, delta_table_path, s3_details):
     delta_processor = DeltaTableProcessor(delta_table_path, s3_details)
-    logger.error(f"{delta_table_path=}")
+    # logger.error(f"{delta_table_path=}")
     # dt_init = delta_processor._init_table()
 
     # assert dt_init.is_ok()
@@ -59,7 +59,7 @@ def test_init_delta_table(delta_table_with_data, delta_table_path, s3_details):
 @pytest.fixture(scope="session")
 def initialized_delta_table(delta_table_with_data, delta_table_path, s3_details):
     delta_processor = DeltaTableProcessor(delta_table_path, s3_details)
-    logger.error(f"{delta_table_path=}")
+    # logger.error(f"{delta_table_path=}")
     # # dt_init = delta_processor._init_table()
 
     # assert dt_init.is_ok()
@@ -74,7 +74,7 @@ def test_compact_table(initialized_delta_table, delta_table_path):
 
     assert result.is_ok()
 
-    logger.error(f"{result.unwrap()=}")
+    # logger.error(f"{result.unwrap()=}")
 
     # dt_result.optimize.compact()
 
@@ -94,7 +94,7 @@ def test_vacuum_table(initialized_delta_table, delta_table_path):
 
     result = processor.vacuum_table(retention_hours=0, enforce_retention_duration=False, dry_run=False)
     assert result.is_ok()
-    logger.error(f"{result.unwrap()=}")
+    # logger.error(f"{result.unwrap()=}")
 
     vacuumed_dt_result = DeltaTable(delta_table_path)
     assert vacuumed_dt_result.version() == 13
@@ -127,7 +127,7 @@ def test_create_checkpoint(initialized_delta_table, delta_table_path):
     result = processor.create_checkpoint()
     
     assert result.is_ok()
-    logger.error(f"{result.unwrap()=}")
+    # logger.error(f"{result.unwrap()=}")
 
     last_result = DeltaTable(delta_table_path)
     # non-operation
@@ -140,7 +140,13 @@ def test_create_checkpoint(initialized_delta_table, delta_table_path):
 
 
 
+def test_table_version(initialized_delta_table, delta_table_path):
+    processor = initialized_delta_table
 
+    result = processor.table_version()
+    assert result.is_ok()
+
+    assert result.unwrap() == 11
 
     
 

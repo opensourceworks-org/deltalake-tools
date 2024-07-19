@@ -1,14 +1,9 @@
-import pytest
 
 from deltalake_tools.models.models import (
     S3ClientDetails,
-    S3KeyPairWrite,
     VirtualAddressingStyle,
     S3Scheme,
 )
-from deltalake_tools.result import Result, Ok, Err
-
-
 
 def test_s3_details_default() -> None:
     default_result = S3ClientDetails.default()

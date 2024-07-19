@@ -15,7 +15,7 @@ def evaluate_result(result: Result) -> None:
     if result.is_ok():
         logger.info(f"Result: {result.unwrap()}")
     else:
-        logging.error(f"Error: {result.unwrap_err()}")
+        logging.info(f"Error: {result.unwrap_err()}")
 
 def test_result() -> None:
     result = divide(10, 2)

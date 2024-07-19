@@ -15,7 +15,7 @@ from deltalake_tools.core.core import (
     delta_compact,
     delta_vacuum,
     delta_create_checkpoint,
-    delta_version
+    table_version as delta_table_version
 )
 
 
@@ -171,7 +171,7 @@ def test_s3_create_checkpoint(s3_bucket, s3_details, s3_delta_table_path):
 def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
     assert dt.version() == 12
-    result = delta_version(s3_delta_table_path, s3_details)
+    result = delta_table_version(s3_delta_table_path, s3_details)
     assert isinstance(result.unwrap(), int)
 
     assert result.is_ok()
@@ -186,5 +186,5 @@ def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     bucket_name = 'test-bucket'
 
     files = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="cli-delta-table/_delta_log/_last_checkpoint")
-    logger.error(f"{files=}")
+    # logger.error(f"{files=}")
     assert files["KeyCount"] == 1

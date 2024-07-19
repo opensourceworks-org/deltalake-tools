@@ -1,9 +1,8 @@
 import pytest
 import tempfile
-import time
 import logging
 import pandas as pd
-from deltalake import DeltaTable, write_deltalake
+from deltalake import write_deltalake
 from deltalake_tools.models.models import (
     S3ClientDetails,
     S3KeyPairWrite,
@@ -36,41 +35,36 @@ def s3_details(s3key_pair_write) -> S3ClientDetails:
 
 @pytest.fixture(scope="session")
 def tmp_path():
-    return tempfile.TemporaryDirectory()
+    tmp_path = tempfile.TemporaryDirectory()
+    yield tmp_path.name
 
 @pytest.fixture(scope="session")
 def delta_table_path(tmp_path):
-    # Create a temporary directory for the Delta table
-    delta_table_path = (f"{tmp_path.name}/delta-table")
+
+    delta_table_path = (f"{tmp_path}/delta-table")
     
-    # Initialize the Delta table with some mock data
     data = pd.DataFrame({
         "id": [1, 2],
         "name": ["Alice", "Bob"]
     })
     
-    # Write the data to the Delta table
     write_deltalake(delta_table_path, data, mode="overwrite")
     
     yield delta_table_path
 
+
 @pytest.fixture(scope="session")
 def cli_delta_table_path(tmp_path):
-    # Create a temporary directory for the Delta table
-    delta_table_path = (f"{tmp_path.name}/delta-table_cli")
+    delta_table_path = (f"{tmp_path}/delta-table_cli")
     
-    # Initialize the Delta table with some mock data
     data = pd.DataFrame({
         "id": [1, 2],
         "name": ["Alice", "Bob"]
     })
     
-    # Write the data to the Delta table
     write_deltalake(delta_table_path, data, mode="overwrite")
     
     yield delta_table_path
-    logger.error(f"closing delta table: {delta_table_path}")
-    time.sleep(3)
 
 
 

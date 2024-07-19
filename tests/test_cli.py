@@ -1,19 +1,22 @@
 from click.testing import CliRunner
-from deltalake_tools.cli.cli import vacuum, compact, create_checkpoint
+from deltalake_tools.cli.cli import (
+    vacuum,
+    compact,
+    create_checkpoint,
+    table_version
+)
 from deltalake import DeltaTable, write_deltalake
 import pandas as pd
 import pytest
 import logging
-import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
-def test_cli_delta_table_with_data(cli_delta_table_path):
-    # delta_table_path = f"{delta_table_path}_cli"
+@pytest.fixture(scope="session")
+def cli_delta_table_with_data(cli_delta_table_path):
     dt = DeltaTable(cli_delta_table_path)
-    logger.error(f"{cli_delta_table_path=}")
+    # logger.error(f"{cli_delta_table_path=}")
 
     assert dt.version() == 0
 
@@ -34,33 +37,37 @@ def test_cli_delta_table_with_data(cli_delta_table_path):
 
     # shutil.copytree(cli_delta_table_path, "/tmp/delta_table_backup")
 
-    # yield cli_delta_table_path
+    yield cli_delta_table_path
 
 
-def test_compact(cli_delta_table_path):
+def test_compact(cli_delta_table_with_data):
+    runner = CliRunner()
+    result = runner.invoke(compact, [cli_delta_table_with_data])
+    assert result.exit_code == 0
+    assert "numFilesAdded" in result.output
+
+def test_vacuum(cli_delta_table_with_data, cli_delta_table_path):
   runner = CliRunner()
-  result = runner.invoke(compact, [cli_delta_table_path])
+  result = runner.invoke(vacuum, [cli_delta_table_with_data,
+                                  "--retention-hours",
+                                  0,
+                                  "--force",
+                                  "--disable-retention-duration"]
+                        )
   assert result.exit_code == 0
-  time.sleep(2)
-#   assert "numFilesAdded" in result.output
-
-# def test_vacuum( cli_delta_table_path):
-#   runner = CliRunner()
-#   result = runner.invoke(vacuum, [cli_delta_table_path,
-#                                   "--retention-hours",
-#                                   0,
-#                                   "--force",
-#                                   "--disable-retention-duration"]
-#                         )
-#   assert result.exit_code == 0
-#   assert "parquet" in result.output
-#   time.sleep(0.5)
+  assert "parquet" in result.output
 
 
-# def test_create_checkpoint( cli_delta_table_path):
-#     runner = CliRunner()
-#     result = runner.invoke(create_checkpoint, [cli_delta_table_path])
+def test_create_checkpoint(cli_delta_table_with_data, cli_delta_table_path):
+    runner = CliRunner()
+    result = runner.invoke(create_checkpoint, [cli_delta_table_with_data])
 
-#     assert result.exit_code == 0
-#     assert "Checkpoint created successfully" in result.output
-#     time.sleep(0.5)
+    assert result.exit_code == 0
+    assert "Checkpoint created successfully" in result.output
+
+def test_table_version(cli_delta_table_with_data):
+    runner = CliRunner()
+    result = runner.invoke(table_version, [cli_delta_table_with_data])
+
+    assert result.exit_code == 0
+    assert result.output.strip().isdigit()
