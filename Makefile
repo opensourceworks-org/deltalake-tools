@@ -26,11 +26,18 @@ build: update-version
 	@git cliff -o CHANGELOG.md   
 	@rye build -c
 
+.PHONY: install
+install:
+	rye sync
+
 run: 
 	rye run
 
 publish-test: build
-	twine upload --repository testpypi dist/*
+	rye run twine upload --repository testpypi dist/*
+
+publish-ci: build
+	rye run twine upload --repository-url $(REPOSITORY_URL) dist/*
 
 publish: build
 	twine upload --repository pypi dist/*
@@ -39,4 +46,4 @@ test:
 	rye test
 
 coverage:
-	rye test -- --cov --cov-report html --cov-report xml
+	rye test -- --cov 

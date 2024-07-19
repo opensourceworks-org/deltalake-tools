@@ -1,33 +1,21 @@
-from deltalake import DeltaTable, write_deltalake
-import pandas as pd
 import logging
-import os
-import pytest
-import boto3
-
-import signal
-import requests
-import time
 import shutil
+import signal
 import subprocess as sp
+import time
 
+import boto3
+import pandas as pd
+import pytest
+import requests
 from click.testing import CliRunner
-from deltalake_tools.cli.cli import (
-    vacuum,
-    compact,
-    create_checkpoint,
-    table_version
-)
+from deltalake import DeltaTable, write_deltalake
 
+from deltalake_tools.cli.cli import table_version
+from deltalake_tools.core.core import (delta_compact, delta_create_checkpoint,
+                                       delta_vacuum,)
+from deltalake_tools.core.core import table_version as delta_table_version
 from deltalake_tools.models.models import VirtualAddressingStyle
-
-from deltalake_tools.core.core import (
-    delta_compact,
-    delta_vacuum,
-    delta_create_checkpoint,
-    table_version as delta_table_version
-)
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,7 +28,7 @@ def start_service(service_name, host, port):
         args, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE
     )  # shell=True
     url = "http://{host}:{port}".format(host=host, port=port)
- 
+
     for i in range(0, 30):
         output = process.poll()
         if output is not None:
@@ -49,7 +37,7 @@ def start_service(service_name, host, port):
             print("moto_server stdout: {0}".format(stdout))
             print("moto_server stderr: {0}".format(stderr))
             pytest.fail("Can not start service: {}".format(service_name))
- 
+
         try:
             # we need to bypass the proxies due to monkeypatches
             requests.get(url, timeout=5)
@@ -59,9 +47,9 @@ def start_service(service_name, host, port):
     else:
         stop_process(process)  # pytest.fail doesn't call stop_process
         pytest.fail("Can not start service: {}".format(service_name))
- 
+
     return process
- 
+
 
 def stop_process(process):
     try:
@@ -76,7 +64,8 @@ def stop_process(process):
             exit_code, outs, errors
         )
         raise RuntimeError(msg)
- 
+
+
 @pytest.fixture(scope="session")
 def s3_delta_table_path(s3_bucket, s3_details):
     delta_table_path = f"s3://{s3_bucket}/cli-delta-table"
@@ -88,16 +77,13 @@ def s3_delta_table_path(s3_bucket, s3_details):
     # logger.error(f"{storage_options=}")
 
     for i in range(11):
-        data = pd.DataFrame({
-            "id": [i+2, i+3],
-            "name": [f"{str(i)}_name", f"{str(i)}_other_name"]
-        })
+        data = pd.DataFrame(
+            {"id": [i + 2, i + 3], "name": [f"{str(i)}_name", f"{str(i)}_other_name"]}
+        )
 
-        write_deltalake(delta_table_path,
-                        data,
-                        mode="append",
-                        storage_options=storage_options
-                    )
+        write_deltalake(
+            delta_table_path, data, mode="append", storage_options=storage_options
+        )
 
     # write_deltalake(delta_table_path, data, mode="append", storage_options=storage_options)
 
@@ -121,20 +107,20 @@ def s3_server():
     stop_process(process)
 
 
-
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def s3_bucket(s3_server):
-
-    s3_client = boto3.client('s3', 
-                    aws_access_key_id="test-access-key", 
-                    aws_secret_access_key="test-secret-key", 
-                    region_name="us-east-1",
-                    endpoint_url=s3_server
-                )
-    bucket_name = 'test-bucket'
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id="test-access-key",
+        aws_secret_access_key="test-secret-key",
+        region_name="us-east-1",
+        endpoint_url=s3_server,
+    )
+    bucket_name = "test-bucket"
     s3_client.create_bucket(Bucket=bucket_name)
-  
+
     yield bucket_name
+
 
 def test_s3_delta_table(s3_bucket, s3_details, s3_delta_table_path):
     storage_options_result = s3_details.to_s3_config()
@@ -144,42 +130,60 @@ def test_s3_delta_table(s3_bucket, s3_details, s3_delta_table_path):
 
     assert dt.version() == 10
 
+
 def test_s3_compact(s3_bucket, s3_details, s3_delta_table_path):
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 10
     result = delta_compact(s3_delta_table_path, s3_details)
 
     assert result.is_ok()
     assert "numFilesAdded" in result.unwrap()
 
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 11
 
+
 def test_s3_vacuum(s3_bucket, s3_details, s3_delta_table_path):
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 11
-    result = delta_vacuum(s3_delta_table_path,
-                            s3_details,
-                            retention_hours=0,
-                            enforce_retention_duration=False,
-                            dry_run=False)
+    result = delta_vacuum(
+        s3_delta_table_path,
+        s3_details,
+        retention_hours=0,
+        enforce_retention_duration=False,
+        dry_run=False,
+    )
 
     assert result.is_ok()
     assert any(["parquet" in f for f in result.unwrap()])
     assert len(result.unwrap()) == 11
 
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 12
 
+
 def test_s3_create_checkpoint(s3_bucket, s3_details, s3_delta_table_path):
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 12
     result = delta_create_checkpoint(s3_delta_table_path, s3_details)
 
     assert result.is_ok()
 
+
 def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
-    dt = DeltaTable(s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap())
+    dt = DeltaTable(
+        s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
+    )
     assert dt.version() == 12
     result = delta_table_version(s3_delta_table_path, s3_details)
     assert isinstance(result.unwrap(), int)
@@ -187,36 +191,45 @@ def test_s3_table_version(s3_bucket, s3_details, s3_delta_table_path):
     assert result.is_ok()
     assert result.unwrap() == 12
 
-    s3_client = boto3.client('s3', 
-                aws_access_key_id="test-access-key", 
-                aws_secret_access_key="test-secret-key", 
-                region_name="us-east-1",
-                endpoint_url="http://localhost:5002"
-            )
-    bucket_name = 'test-bucket'
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id="test-access-key",
+        aws_secret_access_key="test-secret-key",
+        region_name="us-east-1",
+        endpoint_url="http://localhost:5002",
+    )
+    bucket_name = "test-bucket"
 
-    files = s3_client.list_objects_v2(Bucket=bucket_name, Prefix="cli-delta-table/_delta_log/_last_checkpoint")
+    files = s3_client.list_objects_v2(
+        Bucket=bucket_name, Prefix="cli-delta-table/_delta_log/_last_checkpoint"
+    )
     # logger.error(f"{files=}")
     assert files["KeyCount"] == 1
 
 
 @pytest.mark.cli
 def test_cli_table_version(s3_bucket, s3_details, s3_delta_table_path):
-
     args = [
         s3_delta_table_path,
-        "--bucket", s3_bucket,
-        "--access-key-id", s3_details.hmac_keys.access_key_id,
-        "--secret-access-key", s3_details.hmac_keys.secret_access_key,
-        "--region", s3_details.region,
-        "--endpoint-host", s3_details.endpoint_host,
-        "--port", s3_details.port,
-        "--scheme", s3_details.scheme.value,
+        "--bucket",
+        s3_bucket,
+        "--access-key-id",
+        s3_details.hmac_keys.access_key_id,
+        "--secret-access-key",
+        s3_details.hmac_keys.secret_access_key,
+        "--region",
+        s3_details.region,
+        "--endpoint-host",
+        s3_details.endpoint_host,
+        "--port",
+        s3_details.port,
+        "--scheme",
+        s3_details.scheme.value,
     ]
 
     if s3_details.allow_unsafe_https:
         args.append("--allow-unsafe-https")
-    
+
     if s3_details.virtual_addressing_style == VirtualAddressingStyle.Path:
         args.append("--path-addressing-style")
 

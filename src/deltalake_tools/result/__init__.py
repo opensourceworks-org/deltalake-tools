@@ -1,18 +1,26 @@
 from enum import Enum
 from typing import Generic, TypeVar, Union
 
+
 # Define the enum for the result status
 class ResultStatus(Enum):
     OK = "OK"
     ERR = "ERR"
 
+
 # Define type variables
-T = TypeVar('T')  # Success type
-E = TypeVar('E')  # Error type
+T = TypeVar("T")  # Success type
+E = TypeVar("E")  # Error type
+
 
 # Define the Result class
 class Result(Generic[T, E]):
-    def __init__(self, status: ResultStatus, value: Union[T, None] = None, error: Union[E, None] = None):
+    def __init__(
+        self,
+        status: ResultStatus,
+        value: Union[T, None] = None,
+        error: Union[E, None] = None,
+    ):
         self.status = status
         self.value = value
         self.error = error
@@ -41,10 +49,11 @@ class Result(Generic[T, E]):
         else:
             return default
 
+
 # Helper functions to create success and error results
 def Ok(value: T) -> Result[T, E]:
     return Result(ResultStatus.OK, value=value)
 
+
 def Err(error: E) -> Result[T, E]:
     return Result(ResultStatus.ERR, error=error)
-

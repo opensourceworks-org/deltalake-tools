@@ -1,17 +1,16 @@
-import pytest
-import tempfile
 import logging
+import tempfile
+
 import pandas as pd
+import pytest
 from deltalake import write_deltalake
-from deltalake_tools.models.models import (
-    S3ClientDetails,
-    S3KeyPairWrite,
-    VirtualAddressingStyle,
-    S3Scheme
-)
+
+from deltalake_tools.models.models import (S3ClientDetails, S3KeyPairWrite,
+                                           S3Scheme, VirtualAddressingStyle,)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 @pytest.fixture(scope="session")
 def s3key_pair_write() -> S3KeyPairWrite:
@@ -19,6 +18,7 @@ def s3key_pair_write() -> S3KeyPairWrite:
         access_key_id="test-access-key",
         secret_access_key="test-secret-access",
     )
+
 
 @pytest.fixture(scope="session")
 def s3_details(s3key_pair_write) -> S3ClientDetails:
@@ -30,49 +30,43 @@ def s3_details(s3key_pair_write) -> S3ClientDetails:
         bucket="my-test-bucket",
         hmac_keys=s3key_pair_write,
         scheme=S3Scheme.Http,
-        allow_unsafe_https=True
+        allow_unsafe_https=True,
     )
+
 
 @pytest.fixture(scope="session")
 def tmp_path():
     tmp_path = tempfile.TemporaryDirectory()
     yield tmp_path.name
 
+
 @pytest.fixture(scope="session")
 def delta_table_path(tmp_path):
+    delta_table_path = f"{tmp_path}/delta-table"
 
-    delta_table_path = (f"{tmp_path}/delta-table")
-    
-    data = pd.DataFrame({
-        "id": [1, 2],
-        "name": ["Alice", "Bob"]
-    })
-    
+    data = pd.DataFrame({"id": [1, 2], "name": ["Alice", "Bob"]})
+
     write_deltalake(delta_table_path, data, mode="overwrite")
-    
+
     yield delta_table_path
 
 
 @pytest.fixture(scope="session")
 def cli_delta_table_path(tmp_path):
-    delta_table_path = (f"{tmp_path}/delta-table_cli")
-    
-    data = pd.DataFrame({
-        "id": [1, 2],
-        "name": ["Alice", "Bob"]
-    })
-    
-    write_deltalake(delta_table_path, data, mode="overwrite")
-    
-    yield delta_table_path
+    delta_table_path = f"{tmp_path}/delta-table_cli"
 
+    data = pd.DataFrame({"id": [1, 2], "name": ["Alice", "Bob"]})
+
+    write_deltalake(delta_table_path, data, mode="overwrite")
+
+    yield delta_table_path
 
 
 # @pytest.fixture(scope="session")
 # def delta_table_with_data(tmp_path):
 #     # Create a temporary directory for the Delta table
 #     delta_table_path = (f"{tmp_path.name}/delta-table")
-    
+
 #     # Initialize the Delta table with some mock data
 #     for i in range(10):
 #         data = pd.DataFrame({
@@ -86,7 +80,7 @@ def cli_delta_table_path(tmp_path):
 #                     )
 #     # Write the data to the Delta table
 #     # write_deltalake(delta_table_path, data)
-    
+
 #     yield delta_table_path
 
 # @pytest.fixture(scope="session")
