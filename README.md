@@ -9,7 +9,7 @@ You probably don't need this, especially if you're already using delta-rs (delta
 It's useful as a delta cli ie. as a cron job.
 
 
-Delta Table Commands currently supported:
+#### Delta Table Commands currently supported:
 - [x] compact
 - [x] vacuum
 - [x] create-checkpoint
@@ -19,6 +19,24 @@ Delta Table Commands currently supported:
 - [ ] convert-to-table
 - [ ] ...
 
+#### Storage services currently supported:
+- [x] local storage
+- [x] AWS S3 (virtual and path addressing style)
+- [x] IBM COS (virtual and path addressing style)
+- [ ] Azure blob storage
+- [ ] Google cloud storage
+- [ ] ...
+
+
+#### Platforms supported
+| | arm64 | amd64 |
+|--|---|---|
+| linux | <center>x</center> | <center>x</center> |
+| mac | <center>x</center> | <center>x</center>|
+| windows | | |
+
+#### Minimal Python version
+3.10
 
 ## Getting started
 
