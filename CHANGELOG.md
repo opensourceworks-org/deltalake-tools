@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Tests with moto
 - Tests and name
 - Correct classifiers
+- Update classifiers in pyproject.toml
 
 ### 📚 Documentation
 
@@ -43,6 +44,8 @@ All notable changes to this project will be documented in this file.
 - Update url in readme
 - Add python classifiers
 - Update more permissive license in readme
+- Update logo
+
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -59,6 +62,8 @@ All notable changes to this project will be documented in this file.
 - Bump version
 - Test tests
 - Good enough
+- Bump version
+- Bump version
 - Bump version
 - Bump version
 - Bump version
