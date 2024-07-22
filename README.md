@@ -1,7 +1,7 @@
 <p align="center">
     <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img/deltalake-tools-lg.png" alt="deltalake-tools logo" height="200">
 </p>
-[![deltalake-tools-logo](imp/deltalake-tools.webp)]
+
 [![deltalake-tools](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml) 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/deltalake-tools?label=Downloads&color=blue&style=flat-square)
 <a href="https://pypi.python.org/pypi/deltalake-tools">
