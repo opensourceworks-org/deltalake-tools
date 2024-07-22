@@ -1,6 +1,6 @@
 [project]
 name = "deltalake-tools"
-version = "0.1.10"
+version = "0.1.11"
 description = "A set of easy to use convenient tools for deltalake tables. "
 authors = [
     { name = "jeroenflvr", email = "jeroen@flexworks.eu" }
@@ -14,6 +14,14 @@ dependencies = [
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
+
+[project.classifiers]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
 
 [project.scripts]
 "deltalake-tools" = "deltalake_tools:main"
