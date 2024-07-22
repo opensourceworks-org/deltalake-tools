@@ -2,6 +2,7 @@
     <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img/deltalake-tools-lg.png" alt="deltalake-tools logo" height="200">
 </p>
 
+![license](https://img.shields.io/pypi/l/deltalake-tools?style=flat-square&color=00ADD4&logo=apache)
 [![deltalake-tools](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml) 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/deltalake-tools?label=Downloads&color=blue&style=flat-square)
 <a href="https://pypi.python.org/pypi/deltalake-tools">
