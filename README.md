@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img\deltalake-logo.webp?raw=true" alt="deltalake-tools logo" height="200">
+    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img\deltalake-logo.png" alt="deltalake-tools logo" height="200">
 </p>
 [![deltalake-tools-logo](imp/deltalake-tools.webp)]
 [![deltalake-tools](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml) 
