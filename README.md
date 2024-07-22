@@ -1,15 +1,23 @@
 <p align="center">
-    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img/deltalake-tools-lg.png" alt="deltalake-tools logo" height="200">
+    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img/deltalake-tools-lg.png?raw=true" alt="deltalake-tools logo" height="200">
 </p>
 
-![license](https://img.shields.io/pypi/l/deltalake-tools?style=flat-square&color=00ADD4&logo=apache)
-[![deltalake-tools](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg)](https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml) 
-![PyPI - Downloads](https://img.shields.io/pypi/dm/deltalake-tools?label=Downloads&color=blue&style=flat-square)
-<a href="https://pypi.python.org/pypi/deltalake-tools">
-  <img alt="deltalake-tools" src="https://img.shields.io/pypi/pyversions/deltalake-tools?style=flat-square&color=00ADD4&logo=python">
-</a>
+<p align="center">
+  <a href="https://pypi.python.org/pypi/deltalake-tools">
+    <img alt="deltalake-tools license" src="https://img.shields.io/pypi/l/deltalake-tools?style=flat-square&color=00ADD4&logo=apache">
+  </a>
+  <a href="https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml">
+    <img alt="deltalake-tools pipelines" src="https://github.com/opensourceworks-org/deltalake-tools/actions/workflows/publish.yml/badge.svg">
+  </a>
+  <a href="https://pypi.python.org/pypi/deltalake-tools">
+    <img alt="deltalake-tools pipelines" src="https://img.shields.io/pypi/dm/deltalake-tools?label=Downloads&color=blue&style=flat-square">
+  </a>
+  <a href="https://pypi.python.org/pypi/deltalake-tools">
+    <img alt="deltalake-tools" src="https://img.shields.io/pypi/pyversions/deltalake-tools?style=flat-square&color=00ADD4&logo=python">
+  </a>
+</p>
 
-# Deltalake Tools __[WIP]__
+# Deltalake Tools
 
 ## Introduction
 
