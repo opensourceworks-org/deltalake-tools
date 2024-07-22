@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Grep binary
 - Tests with moto
 - Tests and name
+- Correct classifiers
 
 ### 📚 Documentation
 
@@ -41,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Update readme
 - Update url in readme
 - Add python classifiers
+- Update more permissive license in readme
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -57,6 +59,7 @@ All notable changes to this project will be documented in this file.
 - Bump version
 - Test tests
 - Good enough
+- Bump version
 - Bump version
 - Bump version
 
