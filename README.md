@@ -15,6 +15,9 @@
   <a href="https://pypi.python.org/pypi/deltalake-tools">
     <img alt="deltalake-tools" src="https://img.shields.io/pypi/pyversions/deltalake-tools?style=flat-square&color=00ADD4&logo=python">
   </a>
+  <a href='https://deltalake-tools.readthedocs.io/en/latest/?badge=latest'>
+      <img src='https://readthedocs.org/projects/deltalake-tools/badge/?version=latest' alt='Documentation Status' />
+  </a>
 </p>
 
 # Deltalake Tools
