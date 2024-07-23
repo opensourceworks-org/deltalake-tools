@@ -1,6 +1,6 @@
 [project]
 name = "deltalake-tools"
-version = "0.1.16"
+version = "0.1.17"
 description = "A set of easy to use convenient tools for deltalake tables. "
 authors = [
     { name = "jeroenflvr", email = "jeroen@flexworks.eu" }
@@ -42,6 +42,8 @@ dev-dependencies = [
     "boto3>=1.34.144",
     "moto[server,s3]>=5.0.11",
     "twine>=5.1.1",
+    "sphinx>=7.4.7",
+    "sphinx-rtd-theme>=2.0.0",
 ]
 
 [tool.hatch.metadata]
