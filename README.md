@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/doc/readme/img/deltalake-tools-lg.png?raw=true" alt="deltalake-tools logo" height="200">
+    <img src="https://github.com/opensourceworks-org/deltalake-tools/blob/main/img/deltalake-tools-lg.png?raw=true" alt="deltalake-tools logo" height="200">
 </p>
 
 <p align="center">
