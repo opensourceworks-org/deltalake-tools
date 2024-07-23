@@ -47,3 +47,7 @@ test:
 
 coverage:
 	rye test -- -m "not slow" --cov 
+
+.PHONY: docs
+docs:
+	. .venv/bin/activate && sphinx-build -b html docs docs/_build/html
