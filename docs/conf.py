@@ -20,7 +20,7 @@ project_info = pyproject_data.get("project", {})
 project = project_info.get("name", "Your Project Name")
 author = ", ".join([author["name"] for author in project_info.get("authors", [{"name": "Your Name"}])])
 release = project_info.get("version", "0.1")
-
+copyright = '2024, jeroenflvr'
 # -- General configuration ---------------------------------------------------
 
 extensions = [
