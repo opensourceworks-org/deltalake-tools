@@ -18,7 +18,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 @click.group(context_settings=CONTEXT_SETTINGS)
 @click.version_option(version=version)
-def cli():
+def cli() -> None:
     pass
 
 
@@ -65,7 +65,7 @@ def vacuum(
     disable_retention_duration: bool = False,
     force: bool = False,
     **kwargs,
-):
+) -> None:
     client_details = parse_cli_kwargs(delta_table_path, **kwargs)
     result = delta_vacuum(
         delta_table_path,
