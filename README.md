@@ -29,6 +29,7 @@ A set of easy to use commands for deltalake, with a command line interface.
 You probably don't need this, especially if you're already using delta-rs (deltalake). Just like you don't need awscli when you already have a boto3 client.
 It's useful as a delta cli ie. as a cron job.
 
+Also working on a Rust implementation, with python bindings using [PYO3/maturin](https://github.com/PyO3/maturin).
 
 #### Delta Table Commands currently supported:
 - [x] compact

@@ -1,6 +1,6 @@
 [project]
 name = "deltalake-tools"
-version = "0.1.19"
+version = "0.1.20"
 description = "A set of easy to use convenient tools for deltalake tables. "
 authors = [
     { name = "jeroenflvr", email = "jeroen@flexworks.eu" }
