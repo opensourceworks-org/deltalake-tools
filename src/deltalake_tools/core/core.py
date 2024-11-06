@@ -123,3 +123,12 @@ def table_version(
         return Err(f"DeltaTable {delta_table_path} not found.")
 
     return processor.table_version()
+
+
+def convert_parquet_to_delta(
+    source_path: str,
+    table_path: str = None,
+    inplace: bool = False,
+    storage_options: S3ClientDetails = None,
+):
+    return Ok("Not implemented yet.")

@@ -7,7 +7,9 @@ import pandas as pd
 import pytest
 from deltalake import DeltaTable, write_deltalake
 
-from deltalake_tools.core.core import DeltaTableProcessor
+from deltalake_tools.core.core import DeltaTableProcessor, convert_parquet_to_delta
+from time import sleep
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -147,3 +149,13 @@ def test_table_version(initialized_delta_table, delta_table_path):
     assert result.is_ok()
 
     assert result.unwrap() == 11
+
+
+@pytest.mark.run
+def test_convert_to_delta(parquet_table_path):
+    logger.warning("tesing here")
+    logger.warning(parquet_table_path)
+    
+    result = convert_parquet_to_delta(parquet_table_path)
+
+    assert result.is_ok()

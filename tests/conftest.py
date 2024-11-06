@@ -41,6 +41,16 @@ def tmp_path():
 
 
 @pytest.fixture(scope="session")
+def parquet_table_path(tmp_path):
+    parquet_table = f"{tmp_path}/parquet-table"
+
+    data = pd.DataFrame({"id": [1, 2], "name": ["Alice", "Bob"]})
+
+    data.to_parquet(parquet_table)
+
+    yield parquet_table
+
+@pytest.fixture(scope="session")
 def delta_table_path(tmp_path):
     delta_table_path = f"{tmp_path}/delta-table"
 
