@@ -1,5 +1,6 @@
 import logging
 import tempfile
+import os
 
 import pandas as pd
 import pytest
@@ -43,10 +44,12 @@ def tmp_path():
 @pytest.fixture(scope="session")
 def parquet_table_path(tmp_path):
     parquet_table = f"{tmp_path}/parquet-table"
+    os.makedirs(parquet_table)
+    parquet_filename = f"{parquet_table}/data.parquet"
 
     data = pd.DataFrame({"id": [1, 2], "name": ["Alice", "Bob"]})
 
-    data.to_parquet(parquet_table)
+    data.to_parquet(parquet_filename)
 
     yield parquet_table
 
