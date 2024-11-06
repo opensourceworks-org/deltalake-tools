@@ -153,8 +153,18 @@ def test_table_version(initialized_delta_table, delta_table_path):
 
 
 @pytest.mark.run
-def test_convert_to_delta(parquet_table_path):
+def test_convert_parquet_to_delta(parquet_table_path):
     logger.warning(parquet_table_path)
     result = convert_parquet_to_delta(parquet_table_path)
 
     assert result.is_ok() is True
+
+@pytest.mark.run
+def test_convert_partitioned_parquet_to_delta(partitioned_parquet_table_path):
+    logger.warning(partitioned_parquet_table_path)
+    # partition_by = 'job'
+    
+    result = convert_parquet_to_delta(partitioned_parquet_table_path, infer_partitioning=True)
+
+    assert result.is_ok() is True
+    # sleep(60000)
