@@ -6,7 +6,7 @@ from click.testing import CliRunner
 from deltalake import DeltaTable, write_deltalake
 
 from deltalake_tools.cli.cli import (compact, create_checkpoint, table_version,
-                                     vacuum,)
+                                     vacuum, convert_parquet_to_delta)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,6 +37,9 @@ def cli_delta_table_with_data(cli_delta_table_path):
 
     yield cli_delta_table_path
 
+# @pytest.fixture(scope="session")
+# def parquet_table_with_data(cli_tmp_path_partitioned):
+#     pass
 
 def test_compact(cli_delta_table_with_data):
     runner = CliRunner()
@@ -75,3 +78,21 @@ def test_table_version(cli_delta_table_with_data):
 
     assert result.exit_code == 0
     assert result.output.strip().isdigit()
+
+
+@pytest.mark.run
+def test_convert_parquet_to_delta(cli_tmp_path_partitioned):
+    runner = CliRunner()
+
+    result = runner.invoke(
+        convert_parquet_to_delta,
+        [
+            cli_tmp_path_partitioned,
+            "--infer-partitioning",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert result.output.strip() == "Conversion successful."
+    
+

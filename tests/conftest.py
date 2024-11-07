@@ -1,5 +1,6 @@
 import logging
 import tempfile
+import os
 
 import pandas as pd
 import pytest
@@ -39,6 +40,52 @@ def tmp_path():
     tmp_path = tempfile.TemporaryDirectory()
     yield tmp_path.name
 
+@pytest.fixture(scope="session")
+def tmp_path_partitioned():
+    tmp_path = tempfile.TemporaryDirectory()
+    yield tmp_path.name
+
+@pytest.fixture(scope="session")
+def tmp_output_path_partitioned():
+    tmp_path = tempfile.TemporaryDirectory()
+    yield tmp_path.name
+
+@pytest.fixture(scope="session")
+def cli_tmp_path_partitioned():
+    tmp_path = tempfile.TemporaryDirectory()
+    yield tmp_path.name
+
+@pytest.fixture(scope="session")
+def tmp_output_path():
+    tmp_path = tempfile.TemporaryDirectory()
+    yield tmp_path.name
+
+
+@pytest.fixture(scope="session")
+def parquet_table_path(tmp_path):
+    parquet_table = f"{tmp_path}/parquet-table"
+    os.makedirs(parquet_table)
+    parquet_filename = f"{parquet_table}/data.parquet"
+
+    data = pd.DataFrame({"id": [1, 2], "name": ["Alice", "Bob"]})
+
+    data.to_parquet(parquet_filename)
+
+    yield parquet_table
+
+@pytest.fixture(scope="session")
+def partitioned_parquet_table_path(tmp_path_partitioned):
+    parquet_table = f"{tmp_path_partitioned}/parquet-table"
+
+    data = pd.DataFrame({"id": [1, 2, 3], 
+                         "name": ["Alice", "Bob", "Frank"],
+                         "job": ["Engineer", "Doctor", "Doctor"]}
+                    )
+
+    data['job'] = data['job'].astype('category')
+    data.to_parquet(parquet_table, partition_cols=["job"])
+
+    yield parquet_table
 
 @pytest.fixture(scope="session")
 def delta_table_path(tmp_path):

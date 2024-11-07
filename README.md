@@ -186,6 +186,11 @@ $ deltalake-tools table-version /tmp/test_delta_table
 - pytest
 - moto[server]: needs to be started before initializing any clients (boto3, delta)
 
+Running tests:
+```shell
+$ rye run pytest tests
+```
+
 ### management
 - [rye](https://rye.astral.sh/)
 - make

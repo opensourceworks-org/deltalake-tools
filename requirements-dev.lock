@@ -51,7 +51,7 @@ coverage==7.6.0
 cryptography==42.0.8
     # via joserfc
     # via moto
-deltalake==0.18.2
+deltalake==0.21.0
     # via deltalake-tools
 docker==7.1.0
     # via moto
@@ -131,7 +131,6 @@ nh3==0.2.18
     # via readme-renderer
 numpy==2.0.0
     # via pandas
-    # via pyarrow
 openapi-schema-validator==0.6.2
     # via openapi-spec-validator
 openapi-spec-validator==0.7.1
@@ -150,16 +149,14 @@ ply==3.11
     # via jsonpath-ng
 py-partiql-parser==0.5.5
     # via moto
-pyarrow==17.0.0
-    # via deltalake
-pyarrow-hotfix==0.6
+pyarrow==18.0.0
     # via deltalake
 pycparser==2.22
     # via cffi
-pydantic==2.8.2
+pydantic==2.9.2
     # via aws-sam-translator
     # via deltalake-tools
-pydantic-core==2.20.1
+pydantic-core==2.23.4
     # via pydantic
 pygments==2.18.0
     # via readme-renderer
@@ -169,7 +166,7 @@ pyparsing==3.1.2
     # via moto
 pytest==8.2.2
     # via pytest-cov
-pytest-cov==5.0.0
+pytest-cov==6.0.0
 python-dateutil==2.9.0.post0
     # via botocore
     # via moto
@@ -220,10 +217,10 @@ six==1.16.0
     # via rfc3339-validator
 snowballstemmer==2.2.0
     # via sphinx
-sphinx==7.4.7
+sphinx==8.1.3
     # via sphinx-rtd-theme
     # via sphinxcontrib-jquery
-sphinx-rtd-theme==2.0.0
+sphinx-rtd-theme==3.0.1
 sphinxcontrib-applehelp==1.0.8
     # via sphinx
 sphinxcontrib-devhelp==1.0.6

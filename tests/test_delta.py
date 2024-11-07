@@ -8,6 +8,9 @@ import pytest
 from deltalake import DeltaTable, write_deltalake
 
 from deltalake_tools.core.core import DeltaTableProcessor
+from deltalake_tools.core.convert import convert_parquet_to_delta
+from time import sleep
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -147,3 +150,21 @@ def test_table_version(initialized_delta_table, delta_table_path):
     assert result.is_ok()
 
     assert result.unwrap() == 11
+
+
+@pytest.mark.run
+def test_convert_parquet_to_delta(parquet_table_path):
+    logger.warning(parquet_table_path)
+    result = convert_parquet_to_delta(parquet_table_path)
+
+    assert result.is_ok() is True
+
+@pytest.mark.run
+def test_convert_partitioned_parquet_to_delta(partitioned_parquet_table_path):
+    logger.warning(partitioned_parquet_table_path)
+    # partition_by = 'job'
+    
+    result = convert_parquet_to_delta(partitioned_parquet_table_path, infer_partitioning=True)
+
+    assert result.is_ok() is True
+    # sleep(60000)

@@ -123,3 +123,4 @@ def table_version(
         return Err(f"DeltaTable {delta_table_path} not found.")
 
     return processor.table_version()
+

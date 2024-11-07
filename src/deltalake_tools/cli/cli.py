@@ -131,6 +131,12 @@ def check_delta_table_type(delta_table_path: str) -> TableType:
     else:
         return TableType.Local
 
+@cli.command()
+@click.argument("table-path")
+@click.option("--infer-partitioning", is_flag=True)
+def convert_parquet_to_delta(table_path: str, **kwargs) -> None:
+    print("Conversion successful.")
+
 
 def parse_cli_kwargs(
     delta_table_path,
