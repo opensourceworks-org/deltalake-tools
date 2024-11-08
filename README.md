@@ -39,10 +39,10 @@ Also working on a Rust implementation, with python bindings using [PYO3/maturin]
 - [x] table-version
 - [ ] delete-table
 - [ ] create-test-table
-- [x] parquet-to-delta ^1^
+- [x] parquet-to-delta <sup>1</sup>
 - [ ] ...
 
-^1^: currently limited to inplace and local storage
+<sup>1</sup>: currently limited to inplace and local storage
 
 #### Storage services currently supported
 
