@@ -42,7 +42,6 @@ class DeltaConverter:
         # logger.warning(f"{infer_partitioning=}")
         if infer_partitioning:
             partition_schema = self.infer_partitioning()
-            logger.warning(f"{partition_schema=}")
 
         if partition_schema is not None and partition_strategy is None:
             partition_strategy = "hive"
