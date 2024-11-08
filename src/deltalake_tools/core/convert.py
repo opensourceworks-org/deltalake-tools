@@ -8,6 +8,7 @@ from deltalake_tools.result import Err, Ok, Result
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class DeltaConverter:
     def __init__(self, source_path: str, table_path: str = None):
         self.source_path = source_path
@@ -17,7 +18,7 @@ class DeltaConverter:
         dataset = ds.dataset(self.source_path, format="parquet", partitioning="hive")
 
         partitioning = dataset.partitioning
-        
+
         if partitioning:
             schema = partitioning.schema
             partition_schema: list[tuple[str, str]] = []
@@ -29,14 +30,16 @@ class DeltaConverter:
             print("The dataset is not partitioned.")
             return None
 
-    def convert_parquet_to_delta(self, 
-            inplace: bool = False,
-            storage_options: S3ClientDetails = None,
-            partition_schema: pa.Schema = None,
-            partition_strategy: str = None,
-            infer_partitioning: bool = False) -> Result[str, str]:
+    def convert_parquet_to_delta(
+        self,
+        inplace: bool = False,
+        storage_options: S3ClientDetails = None,
+        partition_schema: pa.Schema = None,
+        partition_strategy: str = None,
+        infer_partitioning: bool = False,
+    ) -> Result[str, str]:
 
-        logger.warning(f"{infer_partitioning=}")
+        # logger.warning(f"{infer_partitioning=}")
         if infer_partitioning:
             partition_schema = self.infer_partitioning()
             logger.warning(f"{partition_schema=}")
@@ -49,30 +52,30 @@ class DeltaConverter:
 
         try:
             convert_to_deltalake(
-                    self.source_path,
-                    storage_options=storage_options,
-                    partition_by=partition_schema,
-                    partition_strategy=partition_strategy,  
-                )  
+                self.source_path,
+                storage_options=storage_options,
+                partition_by=partition_schema,
+                partition_strategy=partition_strategy,
+            )
         except Exception as e:
             logger.error(f"Error converting Parquet to Delta: {str(e)}")
             return Err(f"Error converting Parquet to Delta: {str(e)}")
 
         return Ok("Parquet converted to Delta successfully")
 
-        
+
 def convert_parquet_to_delta(
     source_path: str,
     table_path: str = None,
     inplace: bool = False,
     storage_options: S3ClientDetails = None,
     partition_schema: pa.Schema = None,
-    infer_partitioning: bool = False
+    infer_partitioning: bool = False,
 ) -> Result[str, str]:
     converter = DeltaConverter(source_path, table_path)
     return converter.convert_parquet_to_delta(
         inplace=inplace,
         storage_options=storage_options,
         partition_schema=partition_schema,
-        infer_partitioning=infer_partitioning)
-    
+        infer_partitioning=infer_partitioning,
+    )

@@ -8,6 +8,7 @@ import boto3
 import pandas as pd
 import pytest
 import requests
+from time import sleep
 from click.testing import CliRunner
 from deltalake import DeltaTable, write_deltalake
 
@@ -148,6 +149,9 @@ def test_s3_compact(s3_bucket, s3_details, s3_delta_table_path):
 
 @pytest.mark.slow
 def test_s3_vacuum(s3_bucket, s3_details, s3_delta_table_path):
+    logger.info("sleeping for 2 seconds")
+    sleep(2)
+
     dt = DeltaTable(
         s3_delta_table_path, storage_options=s3_details.to_s3_config().unwrap()
     )

@@ -3,12 +3,20 @@ import logging
 import click
 
 from deltalake_tools.__version__ import version
-from deltalake_tools.core.core import (delta_compact, delta_create_checkpoint,
-                                       delta_vacuum,)
+from deltalake_tools.core.core import (
+    delta_compact,
+    delta_create_checkpoint,
+    delta_vacuum,
+)
 from deltalake_tools.core.core import table_version as delta_table_version
-from deltalake_tools.models.models import (S3ClientDetails, S3KeyPairWrite,
-                                           S3Scheme, TableType,
-                                           VirtualAddressingStyle,)
+from deltalake_tools.core.convert import convert_parquet_to_delta
+from deltalake_tools.models.models import (
+    S3ClientDetails,
+    S3KeyPairWrite,
+    S3Scheme,
+    TableType,
+    VirtualAddressingStyle,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -131,11 +139,27 @@ def check_delta_table_type(delta_table_path: str) -> TableType:
     else:
         return TableType.Local
 
+
 @cli.command()
 @click.argument("table-path")
+@click.option("--inplace", is_flag=True)
 @click.option("--infer-partitioning", is_flag=True)
-def convert_parquet_to_delta(table_path: str, **kwargs) -> None:
-    print("Conversion successful.")
+def parquet_to_delta(
+    table_path: str, inplace: bool = False, infer_partitioning: bool = False
+) -> None:
+
+    # logger.warning(f"{table_path=}")
+    # logger.warning(f"{inplace=}")
+    # logger.warning(f"{infer_partitioning=}")
+
+    result = convert_parquet_to_delta(
+        table_path, inplace=inplace, infer_partitioning=infer_partitioning
+    )
+
+    if result.is_err():
+        print(result.unwrap_err())
+    else:
+        print(result.unwrap())
 
 
 def parse_cli_kwargs(
