@@ -27,10 +27,11 @@ babel==2.15.0
     # via sphinx
 blinker==1.8.2
     # via flask
-boto3==1.34.144
+boto3==1.35.71
     # via aws-sam-translator
+    # via deltalake-tools
     # via moto
-botocore==1.34.144
+botocore==1.35.71
     # via aws-xray-sdk
     # via boto3
     # via moto

@@ -1,10 +1,15 @@
 [project]
 name = "deltalake-tools"
-version = "0.1.22"
+version = "0.2.0"
 description = "A set of easy to use convenient tools for deltalake tables. "
 authors = [{ name = "jeroenflvr", email = "jeroen@flexworks.eu" }]
 license = { text = "Apache-2.0" }
-dependencies = ["pydantic>=2.9.2", "deltalake>=0.21.0", "click>=8.1.7"]
+dependencies = [
+    "pydantic>=2.9.2",
+    "deltalake>=0.21.0",
+    "click>=8.1.7",
+    "boto3>=1.35.71",
+]
 readme = "README.md"
 requires-python = ">= 3.10"
 

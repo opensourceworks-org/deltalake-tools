@@ -142,18 +142,26 @@ def check_delta_table_type(delta_table_path: str) -> TableType:
 
 @cli.command()
 @click.argument("table-path")
-@click.option("--inplace", is_flag=True)
+@click.option("--inplace", is_flag=True, help="currently only supports inplace conversion")
 @click.option("--infer-partitioning", is_flag=True)
+@click.option("--aws-profile", required=False, type=str, help="AWS profile name. Leave blank to use environment variables.")
 def parquet_to_delta(
-    table_path: str, inplace: bool = False, infer_partitioning: bool = False
+    table_path: str, inplace: bool = False, infer_partitioning: bool = False,
+    aws_profile: str = None,
 ) -> None:
 
     # logger.warning(f"{table_path=}")
     # logger.warning(f"{inplace=}")
     # logger.warning(f"{infer_partitioning=}")
 
+    if aws_profile is not None:
+        storage_options = {"aws_profile": aws_profile}
+    else:
+        storage_options = None
+
     result = convert_parquet_to_delta(
-        table_path, inplace=inplace, infer_partitioning=infer_partitioning
+        table_path, inplace=inplace, infer_partitioning=infer_partitioning, 
+        storage_options=storage_options
     )
 
     if result.is_err():
