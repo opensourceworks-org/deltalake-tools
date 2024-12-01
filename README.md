@@ -78,7 +78,7 @@ pip install deltalake-tools
 (uv is a blazingly fast drop-in replacement for pip.)
 
 ```shell
-uv install deltalake-tools
+uv pip install deltalake-tools
 ```
 
 If you prefer rye:

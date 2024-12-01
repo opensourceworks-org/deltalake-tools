@@ -89,7 +89,6 @@ def test_table_version(cli_delta_table_with_data):
 
 @pytest.mark.run
 def test_convert_parquet_to_delta(cli_partitioned_parquet_table_path, capsys):
-
     with capsys.disabled():
         logger.warning(f"cli test: {cli_partitioned_parquet_table_path=}")
         runner = CliRunner()
